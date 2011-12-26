@@ -1,1 +1,14 @@
-This file was created by IntelliJ IDEA 11.0 for binding GitHub repository
+This is a simple web app for analyzing DNA mixtures. Its goal is to compute all possible DNA profiles for 2 or 3 people that can be present in given mixture. User can also specify one known profile to get constrained set of results. Data is loaded in xml files that will be validated against corresponding xml schemas.
+
+Requirements:
+Maven 3.0.3
+Glassfish 3.1.1
+
+Build on top of:
+CDI 1.0
+JSF 2.1
+Richfaces 4.1.0 Final
+
+Authors:
+Marek Maj
+Krzysztof Korbacz
