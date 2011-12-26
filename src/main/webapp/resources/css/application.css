@@ -25,9 +25,6 @@ p{
     margin:0;
     padding:0 0 10px;
 }
-rich-messages{
-    color:red;
-}
 
 #page{
     margin:0 auto;
@@ -41,9 +38,14 @@ rich-messages{
     padding:13px 20px 5px;
 }
 #page-content .bottom-menu{
-    margin-top: 30px;
+    margin-top: 20px;
     min-height:100px;
 }
+#page-content .error-messages{
+    margin-top: 20px;
+    color:red;
+}
+
 #page-content .content-container {
     width:700px;
 }
@@ -60,32 +62,8 @@ rich-messages{
     height:0;
 }
 
-#footer{
-    background:url('#{facesContext.externalContext.requestContextPath}/images/footer.png') top left no-repeat;
-    color:#000000;
-    text-align:center;
-    padding:15px 20px 10px;
-}
-
-.source, div.rf-log {
-    width: 650px;
-}
-
 a.show, a.hide{
     font:bold 12px "Lucida Sans Unicode", "Lucida Grande", Geneva,Verdana,Arial,sans-serif;
     color:#5F9CD0;
     display:block;
-}
-
-/*--- RichFaces panelMenu styles overwriting ---*/
-
-.bottom-menu .rf-pm{
-    border:1px solid #B0BDC5;
-    border-bottom:0;
-}
-.bottom-menu .rf-pm .rf-pm-top-gr{
-    border:0;
-    border-bottom:1px solid #969b9e;
-    margin:0;
-    padding:0;
 }

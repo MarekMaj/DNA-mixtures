@@ -4,14 +4,15 @@ import org.DNA.mixtures.computing.DNAProcessor;
 import org.DNA.mixtures.data.PersonType;
 
 import java.io.Serializable;
-import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 
 @ConversationScoped
 @Named
@@ -21,7 +22,7 @@ public class Conversation implements Serializable{
 	private javax.enterprise.context.Conversation conversation;
 	@Inject
     private DNAProcessor dnaProcessor;
-    private List<PersonType> results;
+    private Object results;
 
 	@Produces @Named
 	private FileUploader fileUploader = new FileUploader();
@@ -29,13 +30,17 @@ public class Conversation implements Serializable{
 	public Conversation() {
 		super();
 	}
-	
+
+    @PostConstruct
+    public void setTimeout(){
+        conversation.setTimeout(600000);
+    }
+
 	public FileUploader getFileUploader() {
 		return fileUploader;
 	}
 
 	public String start(){
-        System.out.println("uruchamia sie start");
 		if (conversation.isTransient()){
 			conversation.begin();
 		}
@@ -43,23 +48,27 @@ public class Conversation implements Serializable{
 	}
 
     public String compute(){
-        // TODO nie uruchamia sie
-        System.out.println("uruchamiam compute");
         if (fileUploader.getMixture() == null){
-            FacesContext.getCurrentInstance().addMessage("Fds", new FacesMessage("Nie wprowadziles poprawnego pliku opisujacego mieszanine"));
-            // TODO wyświetlac bledy faces
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Nie wprowadzileś poprawnego pliku opisującego mieszaninę"));
             return null;
         }
         results = dnaProcessor.process(fileUploader.getMixture(), fileUploader.getPerson() == null ? new PersonType() : fileUploader.getPerson());
         // TODO przechwycic blędy i wyświetlic np. nie zgadza sie liczba markerów w plikach
-        // liczba ludzi wieksza niz 3 itp
+        // liczba ludzi wieksza niz 3, profil takiej osoby nie mógł się znaleźć w tej mieszaninie itp
         return "compute";
     }
 
-    // TODO jeszcze jedna metoda z poziomu result.xhtml zeby wprowadzic i obliczyc person profil
+    public void computePerson(){
+        if (fileUploader.getPerson() == null){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Nie wprowadzileś poprawnego pliku opisującego profil osoby"));
+        }
+        results = dnaProcessor.process(fileUploader.getPerson());
+
+        // TODO przechwycic blędy i wyświetlic np. nie zgadza sie liczba markerów w plikach
+        // liczba ludzi wieksza niz 3 itp
+    }
 
 	public String end(){
-        // TODO nie uruchamia sie
 		if (!conversation.isTransient()){
 			conversation.end();
 		}

@@ -1,26 +1,41 @@
-<html xmlns="http://www.w3.org/1999/xhtml" 
-xmlns:h="http://java.sun.com/jsf/html" 
-xmlns:f="http://java.sun.com/jsf/core" 
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:a4j="http://richfaces.org/a4j"
-xmlns:rich="http://richfaces.org/rich">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a4j="http://richfaces.org/a4j">
 
-   <ui:composition template="template.xhtml">
-       <ui:define name="body">
-           <h:outputText value="Oto obliczone profile pozostałych osób:"/>
-       </ui:define>
-
-
-       <ui:define name="nav">
-           <h:form>
-               <h:commandButton value="Cofnij" action="insert?faces-redirect=true"/>
-           </h:form>
-           <h:form>
-               <h:commandButton value="Zakończ" action="#{conversation.end}"/>
-           </h:form>
-       </ui:define>
-
-   </ui:composition>
+<ui:composition template="templates/template.xhtml">
+    <ui:define name="body">
+        <h:panelGrid columns="2" columnClasses="top,top">
+            <h:form id="table">
+                <ui:include src="templates/resultTable.xhtml"/>
+            </h:form>
+            <h:panelGroup>
+                <h:form>
+                    <ui:include src="templates/personUpload.xhtml"/>
+                </h:form>
+                <h:form>
+                    <a4j:commandButton render="table, error" value="Oblicz z nowym profilem" action="#{conversation.computePerson}"/>
+                </h:form>
+            </h:panelGroup>
+        </h:panelGrid>
+    </ui:define>
+    <ui:define name="nav">
+        <h:panelGrid columns="2">
+            <h:form>
+                <h:commandButton value="Cofnij" action="insert?faces-redirect=true"/>
+            </h:form>
+            <h:form>
+                <h:commandButton value="Zakończ" action="#{conversation.end}"/>
+            </h:form>
+        </h:panelGrid>
+    </ui:define>
+    <ui:define name="error">
+        <h:form id="error">
+            <h:messages globalOnly="true" />
+        </h:form>
+    </ui:define>
+</ui:composition>
 </html>
 
 

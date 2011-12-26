@@ -22,14 +22,13 @@ public class FileUploader {
 
     public void mixtureListener(FileUploadEvent event) throws Exception {
         clearMixture();
-        uploadedMixtureFile = event.getUploadedFile();
+        this.uploadedMixtureFile = event.getUploadedFile();
         this.mixture = handler.createMixture(this.uploadedMixtureFile.getInputStream());
-
     }
  
     public void personListener(FileUploadEvent event) throws Exception {
         clearPerson();
-        uploadedPersonFile = event.getUploadedFile();
+        this.uploadedPersonFile = event.getUploadedFile();
         this.person = handler.createPerson(this.uploadedPersonFile.getInputStream());
     }
 
@@ -43,40 +42,20 @@ public class FileUploader {
         this.person = null;
     }
 
-    public long getTimeStamp() {
-        return System.currentTimeMillis();
-    }
-
-    public MixtureType getMixture() {
-		return mixture;
-	}
-
-    public void setMixture(MixtureType mixture) {
-		this.mixture = mixture;
-	}
-    
-    public PersonType getPerson() {
-		return person;
-	}
-    
-    public void setPerson(PersonType person) {
-		this.person = person;
-	}
-
     public UploadedFile getUploadedPersonFile() {
         return uploadedPersonFile;
     }
 
-    public void setUploadedPersonFile(UploadedFile uploadedPersonFile) {
-        this.uploadedPersonFile = uploadedPersonFile;
+    public MixtureType getMixture() {
+        return mixture;
+    }
+
+    public PersonType getPerson() {
+        return person;
     }
 
     public UploadedFile getUploadedMixtureFile() {
         return uploadedMixtureFile;
-    }
-
-    public void setUploadedMixtureFile(UploadedFile uploadedMixtureFile) {
-        this.uploadedMixtureFile = uploadedMixtureFile;
     }
 }
 

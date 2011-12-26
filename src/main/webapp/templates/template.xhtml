@@ -9,13 +9,15 @@
 <h:outputStylesheet library="css" name="application.css"/>	
 </h:head>
 <h:body>
-    <h:form id ="body">
     <div id="page">
         <div id="page-content">
             <div class="content-container">
                 <ui:insert name="body">
                     Pusta zawartość
                 </ui:insert>
+            </div>
+            <div class="error-messages">
+                <ui:insert name="error"/>
             </div>
             <div class="bottom-menu">
                 <ui:insert name="nav">
@@ -25,7 +27,6 @@
             <div class="clear"></div>
         </div>
     </div>
-    </h:form>
 </h:body> 
 </f:view>
 </html>
