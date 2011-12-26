@@ -1,0 +1,11 @@
+#target folders#
+build/
+bin/
+
+
+#eclipse#
+*.project
+*.settings
+
+*.iml
+*.classpath
