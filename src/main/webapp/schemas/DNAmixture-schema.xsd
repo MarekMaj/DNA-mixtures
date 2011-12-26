@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- root element -->
+<xs:element name="mixture" type="mixtureType"/>
+
+<!-- types -->
+<xs:simpleType name="stringType">
+	<xs:restriction base="xs:string"/>
+</xs:simpleType>
+
+<!-- complex types -->
+<xs:complexType name="mixtureType">
+	<xs:choice>
+		<xs:element name="markers" type="markersType" />
+	</xs:choice>
+</xs:complexType>
+
+<xs:complexType name="markersType">
+	<xs:choice maxOccurs="unbounded">
+		<xs:element name="marker" type="markerType"/>
+	</xs:choice>
+</xs:complexType>
+
+<xs:complexType name="markerType">
+	<xs:choice minOccurs="1" maxOccurs="unbounded">
+		<xs:element name="allel" type="stringType"/>
+	</xs:choice>
+	<xs:attribute name="name" type="stringType"/>
+</xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:h="http://java.sun.com/jsf/html" 
+xmlns:f="http://java.sun.com/jsf/core" 
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:a4j="http://richfaces.org/a4j"
+xmlns:rich="http://richfaces.org/rich">
+
+   <ui:composition template="template.xhtml">
+       <ui:define name="body">
+           <h:outputText value="Oto obliczone profile pozostałych osób:"/>
+       </ui:define>
+
+
+       <ui:define name="nav">
+           <h:form>
+               <h:commandButton value="Cofnij" action="insert?faces-redirect=true"/>
+           </h:form>
+           <h:form>
+               <h:commandButton value="Zakończ" action="#{conversation.end}"/>
+           </h:form>
+       </ui:define>
+
+   </ui:composition>
+</html>
+
+
+

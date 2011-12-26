@@ -1,0 +1,15 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition template="template.xhtml">
+    <ui:define name="body">
+        Witaj! Ta aplikacja służy analizowaniu podanej mieszaniny DNA i znajdowaniu wszystkich możliwych profili genetycznych osób w niej występujących.
+    </ui:define>
+    <ui:define name="nav">
+        <h:form>
+            <h:commandButton value="Rozpocznij" action="#{conversation.start}"/>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

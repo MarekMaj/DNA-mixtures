@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition>
+    <h:outputStylesheet>
+        .top{
+            margin-top: 0;
+        }
+    </h:outputStylesheet>
+    <h:panelGroup styleClass="top">
+        <h:panelGroup>
+            <h:outputText value="Możesz również wprowadzić znany profil 1. osoby w postaci pliku xml zgodnego z XML Schema dostępnym na stronie: "/>
+            <h:outputLink value="schemas/DNAperson-schema.xsd" >person schema</h:outputLink>
+            <br />
+            <h:outputText value="Maksymalny rozmiar pliku to 10kB"/>
+            <rich:fileUpload fileUploadListener="#{fileUploader.personListener}"
+                             id="upload" acceptedTypes="xml" maxFilesQuantity="1">
+                <a4j:ajax event="uploadcomplete" execute="@none" render="info"/>
+            </rich:fileUpload>
+        </h:panelGroup>
+        <h:panelGroup id="info">
+            <rich:panel bodyClass="info">
+                <f:facet name="header">
+                    <h:outputText value="Uploaded Person Info" />
+                </f:facet>
+                <h:outputText value="No files currently uploaded"
+                              rendered="#{fileUploader.uploadedPersonFile==null}" />
+                <h:outputText style="color:red" value ="ERROR: Nie udało się sparsować pliku! Sprawdź czy plik jest zgodny z XML Schema!"
+                              rendered="#{fileUploader.uploadedPersonFile!=null and fileUploader.person==null}" />
+                <h:outputText style="color:green" value ="Wczytano plik:"
+                              rendered="#{fileUploader.uploadedPersonFile!=null and fileUploader.person!=null}" />
+                <rich:panel bodyClass="rich-laguna-panel-no-header" rendered="#{fileUploader.uploadedPersonFile!=null and fileUploader.person!=null}">
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Nazwa pliku:" />
+                        <h:outputText value="#{fileUploader.uploadedPersonFile.name}" />
+                        <h:outputText value="Markerów:" />
+                        <h:outputText value="#{fileUploader.person.markers.getMarker().size()}" />
+                    </h:panelGrid>
+                </rich:panel>
+
+            </rich:panel>
+            <br />
+            <a4j:commandButton action="#{fileUploader.clearPerson}"
+                               render="info, upload" value="Clear Uploaded Data"
+                               rendered="#{fileUploader.uploadedPersonFile!=null}" />
+        </h:panelGroup>
+    </h:panelGroup>
+</ui:composition>
+</html>

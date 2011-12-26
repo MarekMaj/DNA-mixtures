@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<person>
+    <markers>
+        <marker>
+            <allel>A</allel>
+            <allel>B</allel>
+        </marker>
+        <marker>
+            <allel>A</allel>
+            <allel>A</allel>
+        </marker>
+        <marker>
+            <allel>C</allel>
+            <allel>B</allel>
+        </marker>
+        <marker>
+            <allel>A</allel>
+            <allel>B</allel>
+        </marker>
+        <marker>
+            <allel>A</allel>
+            <allel>B</allel>
+        </marker>
+    </markers>
+</person>
