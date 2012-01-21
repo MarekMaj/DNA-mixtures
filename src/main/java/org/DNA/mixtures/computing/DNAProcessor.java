@@ -24,7 +24,7 @@ public class DNAProcessor implements Serializable{
         return null;
     }
 
-    public Object process(PersonType personType){
+    public Object process(MixtureType mixture){
         // ta metoda wolana gdy uzytkownik nie poda w pierwszym kroku profilu osoby
         return null;
     }
