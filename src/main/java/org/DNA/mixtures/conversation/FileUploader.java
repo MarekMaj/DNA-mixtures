@@ -1,8 +1,8 @@
 package org.DNA.mixtures.conversation;
 
 import org.DNA.mixtures.JAXB.JAXBHandler;
-import org.DNA.mixtures.data.MixtureType;
-import org.DNA.mixtures.data.PersonType;
+import org.DNA.mixtures.data.Mixture;
+import org.DNA.mixtures.data.Person;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
@@ -10,8 +10,8 @@ import org.richfaces.model.UploadedFile;
 public class FileUploader {
 
     private JAXBHandler handler = new JAXBHandler();
-	private MixtureType mixture;
-	private PersonType person;
+	private Mixture mixture;
+	private Person person;
 
     private UploadedFile uploadedMixtureFile;
     private UploadedFile uploadedPersonFile;
@@ -46,11 +46,11 @@ public class FileUploader {
         return uploadedPersonFile;
     }
 
-    public MixtureType getMixture() {
+    public Mixture getMixture() {
         return mixture;
     }
 
-    public PersonType getPerson() {
+    public Person getPerson() {
         return person;
     }
 

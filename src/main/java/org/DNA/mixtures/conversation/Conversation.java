@@ -1,11 +1,10 @@
 package org.DNA.mixtures.conversation;
 
 import org.DNA.mixtures.computing.DNAProcessor;
-import org.DNA.mixtures.data.PersonType;
+import org.DNA.mixtures.data.Person;
 
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
@@ -18,7 +17,6 @@ import javax.inject.Named;
 @Named
 public class Conversation implements Serializable{
 
-	@Inject
 	private javax.enterprise.context.Conversation conversation;
 	@Inject
     private DNAProcessor dnaProcessor;
@@ -26,15 +24,17 @@ public class Conversation implements Serializable{
 
 	@Produces @Named
 	private FileUploader fileUploader = new FileUploader();
-	
-	public Conversation() {
-		super();
-	}
 
-    @PostConstruct
-    public void setTimeout(){
-        conversation.setTimeout(600000);
+    public Conversation(){
+        super();
     }
+
+    @Inject
+	public Conversation(javax.enterprise.context.Conversation conversation) {
+        super();
+        this.conversation = conversation;
+        conversation.setTimeout(1200000);
+	}
 
 	public FileUploader getFileUploader() {
 		return fileUploader;
@@ -52,7 +52,7 @@ public class Conversation implements Serializable{
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Nie wprowadzileś poprawnego pliku opisującego mieszaninę"));
             return null;
         }
-        results = dnaProcessor.process(fileUploader.getMixture(), fileUploader.getPerson() == null ? new PersonType() : fileUploader.getPerson());
+        results = dnaProcessor.process(fileUploader.getMixture(), fileUploader.getPerson() == null ? new Person() : fileUploader.getPerson());
         // TODO przechwycic blędy i wyświetlic np. nie zgadza sie liczba markerów w plikach
         // liczba ludzi wieksza niz 3, profil takiej osoby nie mógł się znaleźć w tej mieszaninie itp
         return "compute";

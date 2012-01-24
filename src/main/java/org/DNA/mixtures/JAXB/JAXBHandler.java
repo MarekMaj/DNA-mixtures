@@ -12,15 +12,15 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.DNA.mixtures.data.MixtureType;
-import org.DNA.mixtures.data.PersonType;
+import org.DNA.mixtures.data.Mixture;
+import org.DNA.mixtures.data.Person;
 import org.xml.sax.SAXException;
 
 public class JAXBHandler {
 	
 	@SuppressWarnings("unchecked")
-	public MixtureType createMixture(InputStream is){
-        JAXBElement<MixtureType> obj = null;
+	public Mixture createMixture(InputStream is){
+        JAXBElement<Mixture> obj = null;
         try {
             JAXBContext jc = JAXBContext.newInstance("org.DNA.mixtures.data");
             Unmarshaller unmarshaller = jc.createUnmarshaller();
@@ -30,7 +30,8 @@ public class JAXBHandler {
 
             URL url = JAXBHandler.class.getResource("JAXBHandler.class");
             String className = url.getFile();
-            String s = className.substring(0, className.indexOf("WEB-INF"));
+            System.out.println("url: " + url);
+            String s = className.substring(className.indexOf('/'), className.indexOf("WEB-INF"));
 
             /*String r = JAXBHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
@@ -39,7 +40,7 @@ public class JAXBHandler {
             */
             Schema schema = schemaFactory.newSchema(new File(s+"schemas/DNAmixture-schema.xsd"));
             unmarshaller.setSchema(schema);
-            obj = (JAXBElement<MixtureType>) unmarshaller.unmarshal(is);
+            obj = (JAXBElement<Mixture>) unmarshaller.unmarshal(is);
         } catch (JAXBException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (SAXException e) {
@@ -49,8 +50,8 @@ public class JAXBHandler {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public PersonType createPerson(InputStream is){
-        JAXBElement<PersonType> obj = null;
+	public Person createPerson(InputStream is){
+        JAXBElement<Person> obj = null;
         try {
             JAXBContext jc = JAXBContext.newInstance("org.DNA.mixtures.data");
             Unmarshaller unmarshaller = jc.createUnmarshaller();
@@ -58,10 +59,10 @@ public class JAXBHandler {
             SchemaFactory schemaFactory = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
             URL url = JAXBHandler.class.getResource("JAXBHandler.class");
             String className = url.getFile();
-            String s = className.substring(0, className.indexOf("WEB-INF"));
+            String s = className.substring(className.indexOf('/'), className.indexOf("WEB-INF"));
             Schema schema = schemaFactory.newSchema(new File(s+"schemas/DNAperson-schema.xsd"));
             unmarshaller.setSchema(schema);
-            obj = (JAXBElement<PersonType>) unmarshaller.unmarshal(is);
+            obj = (JAXBElement<Person>) unmarshaller.unmarshal(is);
         } catch (JAXBException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (SAXException e) {

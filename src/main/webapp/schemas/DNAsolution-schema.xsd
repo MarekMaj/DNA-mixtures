@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
     <!-- root element -->
-    <xs:element name="person" type="person"/>
+    <xs:element name="solution" type="solution"/>
 
     <!-- types -->
     <xs:simpleType name="stringType">
@@ -10,14 +10,27 @@
     </xs:simpleType>
 
     <!-- complex types -->
-    <xs:complexType name="person">
-        <xs:choice>
+    <xs:complexType name="solution">
+        <xs:all>
             <xs:element name="markers" type="markers" />
-        </xs:choice>
+        </xs:all>
     </xs:complexType>
 
     <xs:complexType name="markers">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="marker" type="solutionMarker"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="solutionMarker">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="profileCombination" type="profileCombination"/>
+        </xs:choice>
+        <xs:attribute name="name" type="stringType"/>
+    </xs:complexType>
+
+    <xs:complexType name="profileCombination">
+        <xs:choice minOccurs="2" maxOccurs="unbounded">
             <xs:element name="marker" type="personMarker"/>
         </xs:choice>
     </xs:complexType>
@@ -28,5 +41,4 @@
         </xs:sequence>
         <xs:attribute name="name" type="stringType"/>
     </xs:complexType>
-
 </xs:schema>
