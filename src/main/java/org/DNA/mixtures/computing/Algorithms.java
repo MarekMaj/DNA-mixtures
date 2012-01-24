@@ -20,9 +20,6 @@ public class Algorithms {
 	private void initUnusedArr(){
 		for(int i=0; i<unusedArr.length; ++i)
 			unusedArr[i] = 0;
-		//if(gottaGivenProfile){
-		//	++unusedArr[givenProfile.first]; ++unusedArr[givenProfile.second];
-		//}
 	}
 	
 	private void countUnusedAllels(){
