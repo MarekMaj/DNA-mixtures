@@ -6,137 +6,146 @@ import org.DNA.mixtures.data.*;
 
 public class Algorithms {
 		
-	//TODO add comments to fields
-	private ArrayList<Genotype> genotypesList = new ArrayList<Genotype>();
-	private int slots;			
-	private int iter;
-	private ArrayList<String> allels;	//gives comfortable access to mapping
-	private ArrayList<MarkerType> combination;		//easily passed to recursive function	
-	//ArrayList<Genotype> possibleProfiles2 = new ArrayList<Genotype>();	
-	int[] unusedArr;
-	ArrayList<Genotype> result = new ArrayList<Genotype>();
-	int cntr;	//liczba alleli ktore nie trafily do profili
+	private int nMin;
+	private int noOfUnusedAllels;						//how many allels were not used by the algoritm while creating possible profiles combination
+	private int emptySlotsInCombination;				//how many empty slots are left for allels during profiles combination generation				
+	private ArrayList<String> allels;					//allels (variants) which occured in mixture
+	private ArrayList<Genotype> possibleGenotypesList = new ArrayList<Genotype>();
+	private ArrayList<Genotype> innerRepresentationOfCombination = new ArrayList<Genotype>();
+	private ArrayList<ProfileCombination> profilesCombinations;		// recursive function	
+	private int[] unusedAllelsArr;
 	
-	private void initUnusedArr(){
-		for(int i=0; i<unusedArr.length; ++i)
-			unusedArr[i] = 0;
-	}
-	
-	private void countUnusedAllels(){
-		cntr = 0;
-		for(int i=0; i<unusedArr.length; ++i)
-			if(unusedArr[i] == 0)
-				++cntr;
-	}
-	
-	private void generateGenotypes(int nMin){
-		//TODO change the name of product
-		genotypesList.clear();
-		int i, j, size = allels.size(), product = nMin * DNAProcessor.NO_OF_ALLELS_IN_GENOTYPE;
-		for(i=0; i<size; ++i)
-			for(j=i; j<size; ++j)
-				if( !(i==j && allels.size() == product) )
-					genotypesList.add(new Genotype(i,j));		
-	}
-
-	private void placeInSolutionStructure(ArrayList<Genotype> result){
-						
-		MarkerType line = new MarkerType();
-		ArrayList<String> profiles = (ArrayList<String>) line.getAllel();
-		for(Genotype g: result){
-			profiles.add(allels.get(g.first));
-			profiles.add(allels.get(g.second));
-		}		
-		combination.add(line);
-	}
-	
-	//TODO add optimization reducing genotypeList for lower levels
-	private void generateCombinations(int start){	
-		for(int i=start; i<genotypesList.size(); ++i){
-			Genotype profile = genotypesList.get(i);
-			slots -= 2;
-			++unusedArr[profile.first]; ++unusedArr[profile.second];
-			countUnusedAllels();
-			if(cntr <= slots){
-				result.add(profile);
-				if(slots == 0){
-					++iter;
-					//printResult();
-					placeInSolutionStructure(result);
-				}
-				else
-					generateCombinations(i);
-				result.remove(profile);
-			}
-			--unusedArr[profile.first]; --unusedArr[profile.second];
-			slots +=2;
-		}
-	}
+	private int cntr;									//for debugging purposes, no. of combinations generated 
 		
-	public Solution calculateProfiles(int noOfPeopleInMixture, ArrayList<MarkerType> mixtureMarkers){
-		return calculateProfiles(noOfPeopleInMixture, mixtureMarkers, null);
+	public Algorithms(int noOfPeopleInMixture){
+		nMin = noOfPeopleInMixture;
+	}
+			
+	public Solution calculateProfiles(ArrayList<MixtureMarker> mixtureMarkers){
+		return calculateProfiles(mixtureMarkers, null);
 	}
 	
-	public Solution calculateProfiles(int noOfPeopleInMixture, ArrayList<MarkerType> mixtureMarkers, ArrayList<MarkerType> personMarkers){
+	public Solution calculateProfiles(ArrayList<MixtureMarker> mixtureMarkers, ArrayList<PersonMarker> personMarkers){
+		long start = System.nanoTime();
+		
 		Solution solution = new Solution();
-		ArrayList<Marker> markersInSolution = (ArrayList<Marker>)solution.getMarkers();
+		ArrayList<SolutionMarker> solutionMarkers = (ArrayList<SolutionMarker>)solution.getMarker();				
 		
-		int i=0;	
-		for(MarkerType marker : mixtureMarkers){
-			Marker combinations = new Marker(marker.getName());
-			combination = (ArrayList<MarkerType>) combinations.getCombinations();
+		int iter = 0;
+		for(MixtureMarker marker : mixtureMarkers){
+			SolutionMarker solutionMarker = new SolutionMarker();
+			profilesCombinations = (ArrayList<ProfileCombination>)solutionMarker.getProfileCombination();
 			
 			allels = (ArrayList<String>) marker.getAllel();
 
 			if(allels.size() == 1){
-				//TODO put same profiles to the solution structure
-				// in the second version of this method should personMarkers be checked for consistency ? 
+				for(int i=0; i<nMin; ++i)
+					innerRepresentationOfCombination.add(new Genotype(0,0));
+				placeInSolutionStructure(innerRepresentationOfCombination);
 			}
-			//TODO it would probably be better if those 5 structures would reside in memory
-			generateGenotypes(noOfPeopleInMixture);
-			
-			slots = noOfPeopleInMixture * DNAProcessor.NO_OF_ALLELS_IN_GENOTYPE;
-			unusedArr = new int[allels.size()];		//TODO different place of initialization maybe
-			initUnusedArr();
-			if(personMarkers != null){	//TODO put this code into separate method
-				ArrayList<String> genotype = (ArrayList<String>) personMarkers.get(i).getAllel();
-				if( !(allels.contains(genotype.get(0))) || !(allels.contains(genotype.get(1))) ){
-					//TODO inform View about this situation
-					System.out.println("Allels from person profile does not occur in the mixture (for " + marker.getName() + " marker).");
-					return null;
+			else{ 
+				generatePossibleGenotypes();	
+				unusedAllelsArr = new int[allels.size()];
+				emptySlotsInCombination = nMin * DNAProcessor.NO_OF_ALLELS_IN_GENOTYPE;
+				prepareUnusedAllelsArr();	//TODO is it not necessary?
+
+				if(personMarkers != null){
+					ArrayList<String> genotype = (ArrayList<String>) personMarkers.get(iter).getAllel();
+					int index1 = allels.indexOf(genotype.get(0));
+					int index2 = allels.indexOf(genotype.get(1));
+					innerRepresentationOfCombination.add(new Genotype(index1, index2));		
+					++unusedAllelsArr[index1];
+					++unusedAllelsArr[index2];
+					emptySlotsInCombination -= 2;
 				}
-				int index1 = allels.indexOf(genotype.get(0));
-				int index2 = allels.indexOf(genotype.get(1));
-				++unusedArr[index1];
-				++unusedArr[index2];
-				result.add(new Genotype(index1, index2));
-				++i;
-				slots -= 2;
+				
+				cntr = 0;		
+				generateCombinations(0);
+				
+				possibleGenotypesList.clear();
 			}
-			iter = 0; 		//for debugging purposes only, combinations counter
+			solutionMarkers.add(solutionMarker);
 			
-			generateCombinations(0);
-			
-			//System.out.print(iter + "\n\n\n");
-			markersInSolution.add(combinations);
-			
-			result.clear(); //if personMarkers were supplied
+			++iter;
+			//System.out.print(cntr + "\n\n\n");
+			innerRepresentationOfCombination.clear();
 		}
-		//TODO should combinations be cleared as well? allels.clear();?
+
+		profilesCombinations = null;
+		
+		long elapsedTime = System.nanoTime() - start;
+		//System.out.println(String.valueOf(elapsedTime / 1000000000L) + " [s]");
+
 		return solution;	
 	}
-				
+
+	private void prepareUnusedAllelsArr(){	
+		for(int i=0; i<unusedAllelsArr.length; ++i)
+			unusedAllelsArr[i] = 0;
+	}
+	
+	private void countUnusedAllels(){
+		noOfUnusedAllels = 0;
+		for(int i=0; i<unusedAllelsArr.length; ++i)
+			if(unusedAllelsArr[i] == 0)
+				++noOfUnusedAllels;
+	}
+	
+	private void generatePossibleGenotypes(){
+		int i, j, size = allels.size();
+		
+		//This variable helps us reject homozygous ... 
+		//e.g. if there are 5 allels and we know that in mixture there are 3 people, there can be a person with genotype consisting of the same allels 
+		//	   but if there are 6 allels and 3 people none of the allels will occur more than once. 
+		int product = nMin * DNAProcessor.NO_OF_ALLELS_IN_GENOTYPE;		
+		for(i=0; i<size; ++i)
+			for(j=i; j<size; ++j)
+				if( !(i==j && size == product) )
+					possibleGenotypesList.add(new Genotype(i,j));		
+	}	
+		
+	private void placeInSolutionStructure(ArrayList<Genotype> result){
+		ProfileCombination combination = new ProfileCombination();
+		ArrayList<PersonMarker> genotypes = (ArrayList<PersonMarker>)combination.getMarker();
+		
+		for(Genotype g: result){
+			PersonMarker genotype = new PersonMarker();
+			ArrayList<String> allelsInResult = (ArrayList<String>)genotype.getAllel();
+			allelsInResult.add(allels.get(g.first));	//TODO maybe new ?
+			allelsInResult.add(allels.get(g.second));
+			
+			genotypes.add(genotype);
+		}
+		profilesCombinations.add(combination);
+	}
+	
+	private void generateCombinations(int start){	
+		for(int i=start; i<possibleGenotypesList.size(); ++i){
+			Genotype profile = possibleGenotypesList.get(i);
+			++unusedAllelsArr[profile.first]; ++unusedAllelsArr[profile.second];
+			emptySlotsInCombination -= 2;
+			countUnusedAllels();
+			if(noOfUnusedAllels <= emptySlotsInCombination){
+				innerRepresentationOfCombination.add(profile);
+				if(emptySlotsInCombination == 0){
+					++cntr;
+					//printResult();
+					placeInSolutionStructure(innerRepresentationOfCombination);
+				}
+				else{
+					generateCombinations(i);
+				}
+				innerRepresentationOfCombination.remove(profile);
+			}
+			--unusedAllelsArr[profile.first]; --unusedAllelsArr[profile.second];
+			emptySlotsInCombination +=2;
+		}
+	}
+	
 	private void printResult(){				
-		for(Genotype p: result){
+		for(Genotype p: innerRepresentationOfCombination){
 			System.out.print(String.valueOf(p.first) + String.valueOf(p.second) + " ");
 		}
 		System.out.println("");
-	}
-	
-	private void print(){
-		int i = 1;
-		for(Genotype p : genotypesList)
-			System.out.println(String.valueOf(i++) + ". " + p);
-	}
-	
+	}	
 }

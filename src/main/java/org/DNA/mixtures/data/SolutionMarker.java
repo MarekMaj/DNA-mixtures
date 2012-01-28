@@ -42,7 +42,14 @@ public class SolutionMarker {
     @XmlAttribute
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2012-01-24T03:31:42+01:00", comments = "JAXB RI vJAXB 2.1.10 in JDK 6")
     protected String name;
-
+    
+    public SolutionMarker(){
+    	
+    }
+    
+    public SolutionMarker(String value){
+    	name = value;
+    }
     /**
      * Gets the value of the profileCombination property.
      * 
@@ -98,5 +105,46 @@ public class SolutionMarker {
     public void setName(String value) {
         this.name = value;
     }
+    
+	@Override
+	public boolean equals(Object obj) {
+		//check for self-comparison
+		if(this == obj) return true;
+		
+		if( !(obj instanceof SolutionMarker) )
+			return false;
+		
+		SolutionMarker solutionMarker = (SolutionMarker) obj;
+		
+		if( !(name == null ? solutionMarker.name == null : this.equals(solutionMarker.name)) )
+			return false;	
+			
+		if(profileCombination == null && solutionMarker.profileCombination == null)
+			return true;
+		else if(profileCombination == null || solutionMarker.profileCombination == null)
+			return false;
+		else{	
+			if(profileCombination.size() != solutionMarker.profileCombination.size())
+				return false;
+			boolean result = true;
+			for(int i=0; i<profileCombination.size(); ++i){
+				result = ( (profileCombination.get(i) == null) ? solutionMarker.profileCombination.get(i) == null : profileCombination.get(i).equals(solutionMarker.profileCombination.get(i)) );
+				if(!result)
+					return false;
+			}
+		}
+		return true;
+	}    
 
+	@Override
+	public int hashCode() {
+		
+		final int prime = 29;
+		int result = 1;
+		if(name != null)
+			result = prime + name.hashCode();
+		for(ProfileCombination p : profileCombination)
+		    result = result * prime + p.hashCode();
+		return result;
+	}
 }

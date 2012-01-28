@@ -67,5 +67,41 @@ public class ProfileCombination {
         }
         return this.marker;
     }
+	@Override
+	public boolean equals(Object obj) {
+		//check for self-comparison
+		if(this == obj) return true;
+		
+		if( !(obj instanceof ProfileCombination) )
+			return false;
+		
+		ProfileCombination profileCombination = (ProfileCombination) obj;
+		
+		if(marker == null && profileCombination.marker == null)
+			return false;
+		else if(marker == null || profileCombination.marker == null)
+			return false;
+		else{
+			if(marker.size() != profileCombination.marker.size())
+				return false;
+			boolean result = true;
+			for(int i=0; i<marker.size(); ++i){
+				result = ( (marker.get(i) == null) ? profileCombination.marker.get(i) == null : marker.get(i).equals(profileCombination.marker.get(i)) );
+				if(!result)
+					return false;
+			}
+		}
+		return true;
+	}
 
+	@Override
+	public int hashCode() {
+		
+		final int prime = 37;
+		int result = 1;
+		for(PersonMarker m : marker)
+			result = result * prime + m.hashCode();
+		return result;
+		
+	}	
 }

@@ -68,4 +68,41 @@ public class Solution {
         return this.marker;
     }
 
+	@Override
+	public boolean equals(Object obj) {
+		//check for self-comparison
+		if(this == obj) return true;
+		
+		if( !(obj instanceof Solution) )
+			return false;
+		
+		Solution solution = (Solution) obj;
+		
+		if(marker == null && solution.marker == null)
+			return false;
+		else if(marker == null || solution.marker == null)
+			return false;
+		else{
+			if(marker.size() != solution.marker.size())
+				return false;
+			boolean result = true;
+			for(int i=0; i<marker.size(); ++i){
+				result = ( (marker.get(i) == null) ? solution.marker.get(i) == null : marker.get(i).equals(solution.marker.get(i)) );
+				if(!result)
+					return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		
+		final int prime = 31;
+		int result = 1;
+		for(SolutionMarker m : marker)
+			result = result * prime + m.hashCode();
+		return result;
+		
+	}	
 }

@@ -101,4 +101,46 @@ public class PersonMarker {
         this.name = value;
     }
 
+	@Override
+	public boolean equals(Object obj) {
+		//check for self-comparison
+		if(this == obj) return true;
+		
+		if( !(obj instanceof PersonMarker) )
+			return false;
+		
+		PersonMarker personMarker = (PersonMarker) obj;
+		
+		if( !(name == null ? personMarker.name == null : this.equals(personMarker.name)) )
+			return false;	
+			
+		if(allel == null && personMarker.allel == null)
+			return true;
+		else if(allel == null || personMarker.allel == null)
+			return false;
+		else{	
+			if(allel.size() != personMarker.allel.size())
+				return false;
+			boolean result = true;
+			for(int i=0; i<allel.size(); ++i){
+				result = ( (allel.get(i) == null) ? personMarker.allel.get(i) == null : allel.get(i).equals(personMarker.allel.get(i)) );
+				if(!result)
+					return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		
+		final int prime = 23;
+		int result = 1;
+		if(name != null)
+			result = prime + name.hashCode();
+		for(String s : allel)
+		    result = result * prime + s.hashCode();
+		
+		return result;
+	}
 }

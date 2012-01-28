@@ -11,6 +11,6 @@ public class Genotype{
 
 	@Override
 	public String toString() {
-		return "Pair [first=" + first + ", second=" + second + "]";
+		return "Genotype [first=" + first + ", second=" + second + "]";
 	}			
 }

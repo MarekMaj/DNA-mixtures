@@ -4,7 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import org.DNA.mixtures.data.*;
+import org.DNA.mixtures.data.Mixture;
+import org.DNA.mixtures.data.MixtureMarker;
+import org.DNA.mixtures.data.Person;
+import org.DNA.mixtures.data.PersonMarker;
+import org.DNA.mixtures.data.ProfileCombination;
+import org.DNA.mixtures.data.Solution;
+import org.DNA.mixtures.data.SolutionMarker;
+import org.DNA.mixtures.tests.ExampleDataSet;
 
 public class DNAProcessor implements Serializable{
 
@@ -13,21 +20,13 @@ public class DNAProcessor implements Serializable{
 	public static final int MAX_NO_OF_ALLELS = NO_OF_ALLELS_IN_GENOTYPE * MAX_NO_OF_PEOPLE;
 	private int nMin = 0;
 	
+	private Solution mixtureSolution;
+	private ArrayList<MixtureMarker> mixtureMarkers;
+	private Solution solutionWithGivenProfile;
+	
     public DNAProcessor() {
         super();
     }
-
-//    public static void main(String[] args){
-//    	DNAProcessor p = new DNAProcessor(); 
-//    	MarkersType markers = new MarkersType();
-//    	MixtureType mixture = new MixtureType();
-//    	mixture.setMarkers(markers);
-//    	MarkersType markersForPerson = new MarkersType(1);
-//    	
-//    	PersonType person = new PersonType();
-//    	person.setMarkers(markersForPerson);
-//    	p.process(mixture, person);
-//    }
     
     /** Calculates all possible profiles for 2 or 3 people, that fulfill given mixture,
      * if profile for one person is supplied result is constrained and during calculations
@@ -38,34 +37,26 @@ public class DNAProcessor implements Serializable{
      * @param personType 	All markers characterizing given person.
      * @return				Solution of the problem
      */
-    
-    //private Solution s;
-    
-    public Object process(MixtureType mixture, PersonType personType){
-        Algorithms algs = new Algorithms();
-    	Solution s;
+    public Object process(Mixture mixture, Person person) throws ErrorInInputDataException{
         
-    	ArrayList<MarkerType> mixtureMarkers = (ArrayList<MarkerType>) mixture.getMarkers().getMarker();
-    	if (!examineMixture(mixtureMarkers))
-    		return null;    	    	
+    	mixtureMarkers = (ArrayList<MixtureMarker>) mixture.getMarker();
+    	examineMixture(mixtureMarkers);
     	
+    	Algorithms algs = new Algorithms(nMin);
+    		
     	// person profile was supplied
-    	if(personType.getMarkers() != null){
-    		ArrayList<MarkerType> personMarkers = (ArrayList<MarkerType>) personType.getMarkers().getMarker();
-    		if(!examinePersonProfile(personMarkers))
-    			return null;    		 
-    		if(mixtureMarkers.size() != personMarkers.size()){
-    			//TODO inform View about this situation
-    			System.out.println("Different number of markers in mixture and in person profile.");
-    			return null;
-    		}    		
-    		//TODO optionally check if the names of markers are the same ...     			
-    		s = algs.calculateProfiles(nMin, mixtureMarkers, personMarkers);
+    	if(person.getMarker().size() != 0){
+    		ArrayList<PersonMarker> personMarkers = (ArrayList<PersonMarker>) person.getMarker();
+    		examinePersonProfile(personMarkers);    		 
+    		
+    		examinePersonProfileAgainstMixture(mixtureMarkers, personMarkers);
+    		     			
+    		mixtureSolution = algs.calculateProfiles(mixtureMarkers, personMarkers);
     	} 
     	else{
-    		s = algs.calculateProfiles(nMin, mixtureMarkers);
+    		mixtureSolution = algs.calculateProfiles(mixtureMarkers);
     	}
-    	return s;
+    	return mixtureSolution;
     }
 
     /** Calculates the rest of possible profiles combinations when one profile is given and
@@ -76,10 +67,37 @@ public class DNAProcessor implements Serializable{
      * @param personType    Information characterizing given person i.e. markers 
      * @return 				Solution of the problem
      */
-    public Object process(PersonType personType){
-        //temporarily no functionality.
-    	//it will use solution computed thanks to call to two-argument version
-    	return null;
+    public Object process(Person person) throws ErrorInInputDataException{
+    	
+    	ArrayList<PersonMarker> personMarkers = (ArrayList<PersonMarker>) person.getMarker();
+    	examinePersonProfile(personMarkers);
+    	examinePersonProfileAgainstMixture(mixtureMarkers, personMarkers);
+    	solutionWithGivenProfile = new Solution();
+    	ArrayList<SolutionMarker> solutionMarkers = (ArrayList<SolutionMarker>) solutionWithGivenProfile.getMarker();    	
+    	ArrayList<SolutionMarker> mixtureSolutionMarkers = (ArrayList<SolutionMarker>) mixtureSolution.getMarker();
+    	
+    	for(int i=0; i<mixtureSolutionMarkers.size(); ++i){
+    		ArrayList<ProfileCombination> mixtureProfilesCombinations = (ArrayList<ProfileCombination>) mixtureSolutionMarkers.get(i).getProfileCombination();
+    		SolutionMarker solutionMarker = new SolutionMarker();
+    		ArrayList<ProfileCombination> profilesCombinations = (ArrayList<ProfileCombination>)solutionMarker.getProfileCombination();
+    		
+    		for(int j=0; j<mixtureProfilesCombinations.size(); ++j){
+    			ArrayList<PersonMarker> mixtureProfiles = (ArrayList<PersonMarker>) mixtureProfilesCombinations.get(j).getMarker();		
+    			
+    			if(mixtureProfiles.contains(personMarkers.get(i))){
+    				ProfileCombination combination = new ProfileCombination();
+    				ArrayList<PersonMarker> profiles = (ArrayList<PersonMarker>)combination.getMarker();
+    				
+    				for(PersonMarker mixtureProfile : mixtureProfiles){
+    					profiles.add(mixtureProfile);	//new ?? i rozdrobnienie mo¿liwe
+    				}
+    				profilesCombinations.add(combination);
+    			}
+    		}
+    		solutionMarkers.add(solutionMarker);
+    	}
+    	
+		return solutionWithGivenProfile;
     }
     
     /* Checks if mixture doesn't contain any errors,
@@ -88,52 +106,43 @@ public class DNAProcessor implements Serializable{
      * @param markers	All markers contained in the mixture
      * @return 			true if mixture can be passed to the algorithm
      */
-    private boolean examineMixture(ArrayList<MarkerType> markers){
+    private boolean examineMixture(ArrayList<MixtureMarker> markers)throws ErrorInInputDataException{
  	
     	if(markers.size() == 0){
-    		//TODO inform View about this situation
-    		System.out.println("There is not even one marker in the mixture.");
-    		return false;
+    		throw new ErrorInInputDataException("There is not even one marker in the mixture.");
     	}
     	
     	// prepare variables
     	nMin = 0;
     	
-    	for(MarkerType marker : markers){
+    	for(MixtureMarker marker : markers){
     		ArrayList<String> allels = (ArrayList<String>) marker.getAllel();
     		int size = allels.size();
     		
-    		// calculates minimal number of people in the mixture
+    		if(size == 0){
+    			throw new ErrorInInputDataException("There are no variants given for " + marker.getName() + " marker in the mixture.");
+    		}
+    		
+    		// remove all possible repetitions from the mixture
+			HashSet<String> set = new HashSet<String>();
+			ArrayList<Integer> indexesOfRepetitions = new ArrayList<Integer>();
+			for(int i=0; i<size; ++i)
+				if(!set.add(allels.get(i)))
+					indexesOfRepetitions.add((Integer)i);
+    		
+			size = set.size();			
+			if(size > MAX_NO_OF_ALLELS){
+				throw new ErrorInInputDataException("More than " + MAX_NO_OF_ALLELS + " variants for " + marker.getName() + " marker in the mixture.");
+			}
+			for(int i=indexesOfRepetitions.size()-1; i>=0; --i)
+				allels.remove(indexesOfRepetitions.get(i).intValue());
+			
+			// calculates minimal number of people in the mixture
     		int n_min = (size + 1)/2;
     		if(n_min > nMin)
     			nMin = n_min;
-    			
-    		if(size == 0){
-    			//TODO inform View about this situation
-    			System.out.println("There are no variants given for " + marker.getName() + " marker in the mixture.");
-    			return false;
-    		}    		 		
-    		if(size > MAX_NO_OF_ALLELS){
-    			//TODO inform View about this situation
-    			System.out.println("More than " + MAX_NO_OF_ALLELS + " variants for " + marker.getName() + " marker in the mixture, trying to eliminate possible repetitions.");
-    			HashSet<String> set = new HashSet<String>();
-    			ArrayList<Integer> indexesOfRepetitions = new ArrayList<Integer>();
-    			for(int i=0; i<size; ++i)
-    				if(!set.add(allels.get(i)))
-    					indexesOfRepetitions.add((Integer)i);
-    			
-    			if(set.size() > MAX_NO_OF_ALLELS){
-    				System.out.println("Failure, after all, there are more than " + MAX_NO_OF_ALLELS + " variants.");
-    				return false;
-    			}
-    			else{
-    				System.out.println("Success, there were some repetitions, without them there is a proper number of variants.");
-    				for(int i=indexesOfRepetitions.size()-1; i>=0; --i)
-    					allels.remove(indexesOfRepetitions.get(i).intValue());
-    			}			
-    		}  		 		
-    	}
-    	
+    			   		 		 		 		
+    	} 	
     	return true;
     }
     
@@ -142,21 +151,29 @@ public class DNAProcessor implements Serializable{
      * @param markers	All markers characterizing person
      * @return 			true if profile can be passed to the algorithm
      */
-    private boolean examinePersonProfile(ArrayList<MarkerType> markers){
+    private boolean examinePersonProfile(ArrayList<PersonMarker> markers) throws ErrorInInputDataException{
     	
-    	if(markers.size() == 0){
-    		//TODO inform View about this situation
-    		System.out.println("There is not even one marker defined in additional person profile.");
-    		return false;
-    	}
-    	for(MarkerType marker : markers){
+    	for(PersonMarker marker : markers){
     		ArrayList<String> allels = (ArrayList<String>) marker.getAllel();
     		if(allels.size() != NO_OF_ALLELS_IN_GENOTYPE){
-    			//TODO inform View about this situation
-    			System.out.println("Wrong number of allels defined for " + marker.getName() + " marker in the additional person profile.");
-    			return false;
+    			throw new ErrorInInputDataException("Wrong number of allels defined for " + marker.getName() + " marker in the additional person profile.");
     		}
     	}
+    	return true;
+    }
+    
+    private boolean examinePersonProfileAgainstMixture(ArrayList<MixtureMarker> mixtureMarkers, ArrayList<PersonMarker> personMarkers) throws ErrorInInputDataException{
+		if(mixtureMarkers.size() != personMarkers.size()){
+			throw new ErrorInInputDataException("Different number of markers in mixture and in person profile.");
+		}		
+		for(int i=0; i<mixtureMarkers.size(); ++i){
+			ArrayList<String> allelsInMixture = (ArrayList<String>) mixtureMarkers.get(i).getAllel();
+			ArrayList<String> personAllels = (ArrayList<String>) personMarkers.get(i).getAllel();
+
+			if( !(allelsInMixture.contains(personAllels.get(0))) || !(allelsInMixture.contains(personAllels.get(1))) ){
+				throw new ErrorInInputDataException("Allel from person profile does not occur in the mixture (for " + mixtureMarkers.get(i).getName() + " marker).");
+			}
+		}
     	return true;
     }
 }
