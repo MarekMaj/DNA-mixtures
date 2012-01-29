@@ -20,9 +20,9 @@ public class DNAProcessor implements Serializable{
 	public static final int MAX_NO_OF_ALLELS = NO_OF_ALLELS_IN_GENOTYPE * MAX_NO_OF_PEOPLE;
 	private int nMin = 0;
 	
-	private Solution mixtureSolution;
-	private ArrayList<MixtureMarker> mixtureMarkers;
-	private Solution solutionWithGivenProfile;
+	private Solution mixtureSolution;					//solution calculated when only mixture was given
+	private ArrayList<MixtureMarker> mixtureMarkers;	//markers will be of some help when we want to calculate solution based on solution calculated for mixture only
+	private Solution solutionWithGivenProfile;			//solution when AFTER calculating solution for mixture, profile is supplied 
 	
     public DNAProcessor() {
         super();
@@ -33,9 +33,9 @@ public class DNAProcessor implements Serializable{
      * optimization is used.
      * When there is no information concerning person profile, empty object is passed to the method.
      * 
-     * @param mixture 		All markers characterizing mixture.	
-     * @param personType 	All markers characterizing given person.
-     * @return				Solution of the problem
+     * @param mixture 		Mixture with all markers characterizing it.	
+     * @param person 		Given person with all markers characterizing it.
+     * @return				Solution of the problem.
      */
     public Object process(Mixture mixture, Person person) throws ErrorInInputDataException{
         
@@ -60,12 +60,12 @@ public class DNAProcessor implements Serializable{
     }
 
     /** Calculates the rest of possible profiles combinations when one profile is given and
-     * it wasn't supplied in the first step.
+     * it wasn't supplied in the first step (solution for mixture only was calculated before).
      * This method uses previously calculated data for mixture (form of optimization).
-     * That's because two-argument version of this method is always called earlier.
+     * We have a guarantee that two-argument version of this method is always called earlier.
      * 
-     * @param personType    Information characterizing given person i.e. markers 
-     * @return 				Solution of the problem
+     * @param person    Information characterizing given person i.e. markers 
+     * @return 			Solution of the problem
      */
     public Object process(Person person) throws ErrorInInputDataException{
     	
@@ -89,7 +89,7 @@ public class DNAProcessor implements Serializable{
     				ArrayList<PersonMarker> profiles = (ArrayList<PersonMarker>)combination.getMarker();
     				
     				for(PersonMarker mixtureProfile : mixtureProfiles){
-    					profiles.add(mixtureProfile);	//new ?? i rozdrobnienie mo¿liwe
+    					profiles.add(mixtureProfile);
     				}
     				profilesCombinations.add(combination);
     			}

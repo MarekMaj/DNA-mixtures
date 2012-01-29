@@ -7,24 +7,39 @@ import org.DNA.mixtures.data.*;
 public class Algorithms {
 		
 	private int nMin;
-	private int noOfUnusedAllels;						//how many allels were not used by the algoritm while creating possible profiles combination
+	private int noOfUnusedAllels;						//how many allels were not used by the algorithm while creating possible profiles combination
 	private int emptySlotsInCombination;				//how many empty slots are left for allels during profiles combination generation				
 	private ArrayList<String> allels;					//allels (variants) which occured in mixture
-	private ArrayList<Genotype> possibleGenotypesList = new ArrayList<Genotype>();
-	private ArrayList<Genotype> innerRepresentationOfCombination = new ArrayList<Genotype>();
-	private ArrayList<ProfileCombination> profilesCombinations;		// recursive function	
-	private int[] unusedAllelsArr;
+	private ArrayList<Genotype> possibleGenotypesList = new ArrayList<Genotype>();		//all genotypes that can be created from mixture allels (combinations with repetition)
+	private ArrayList<Genotype> innerRepresentationOfCombination = new ArrayList<Genotype>();		//this and the next field help to put combination into solution structure, they are comfortable to use in recursive function 
+	private ArrayList<ProfileCombination> profilesCombinations;	
+	private int[] unusedAllelsArr;						//array tracks which allels has been already used while combination generation, noOfUnusedAllels uses that information
 	
 	private int cntr;									//for debugging purposes, no. of combinations generated 
-		
+	
+	/** Algorithsm constructor.
+	 * 
+	 * @param noOfPeopleInMixture	algorithms need to know how many people are in mixture (examineMixture ...)
+	 */
 	public Algorithms(int noOfPeopleInMixture){
 		nMin = noOfPeopleInMixture;
 	}
-			
+	
+	/** Calls two-argument version of this method, without specifying personMarkers.
+	 * 
+	 * @param mixtureMarkers	markers characterizing given mixture
+	 * @return					solution of the problem, usually passed to DNAProcessor
+	 */
 	public Solution calculateProfiles(ArrayList<MixtureMarker> mixtureMarkers){
 		return calculateProfiles(mixtureMarkers, null);
 	}
 	
+	/** Actual algorithm, currently it uses recursive function.
+	 * 
+	 * @param mixtureMarkers 	markers characterizing given mixture
+	 * @param personMarkers		markers characterizing person
+	 * @return					solution of the problem, usually passes it to DNAProcessor
+	 */
 	public Solution calculateProfiles(ArrayList<MixtureMarker> mixtureMarkers, ArrayList<PersonMarker> personMarkers){
 		long start = System.nanoTime();
 		
@@ -47,7 +62,7 @@ public class Algorithms {
 				generatePossibleGenotypes();	
 				unusedAllelsArr = new int[allels.size()];
 				emptySlotsInCombination = nMin * DNAProcessor.NO_OF_ALLELS_IN_GENOTYPE;
-				prepareUnusedAllelsArr();	//TODO is it not necessary?
+				//prepareUnusedAllelsArr();
 
 				if(personMarkers != null){
 					ArrayList<String> genotype = (ArrayList<String>) personMarkers.get(iter).getAllel();
@@ -67,7 +82,6 @@ public class Algorithms {
 			solutionMarkers.add(solutionMarker);
 			
 			++iter;
-			//System.out.print(cntr + "\n\n\n");
 			innerRepresentationOfCombination.clear();
 		}
 
@@ -111,7 +125,7 @@ public class Algorithms {
 		for(Genotype g: result){
 			PersonMarker genotype = new PersonMarker();
 			ArrayList<String> allelsInResult = (ArrayList<String>)genotype.getAllel();
-			allelsInResult.add(allels.get(g.first));	//TODO maybe new ?
+			allelsInResult.add(allels.get(g.first));
 			allelsInResult.add(allels.get(g.second));
 			
 			genotypes.add(genotype);

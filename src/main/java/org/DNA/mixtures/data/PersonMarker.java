@@ -122,6 +122,23 @@ public class PersonMarker {
 			if(allel.size() != personMarker.allel.size())
 				return false;
 			boolean result = true;
+			
+			//part responsible for sorting allels, thanks to it order of allels doesn't matter
+			if(allel.size() == 2){
+				int order1 = allel.get(0).compareTo(allel.get(1));
+				int order2 = personMarker.allel.get(0).compareTo(personMarker.allel.get(1));
+				if(order1 > 0){
+					String temp = allel.get(0);
+					allel.set(0, allel.get(1));
+					allel.set(1, temp);
+				}
+				if(order2 > 0){
+					String temp = personMarker.allel.get(0);
+					personMarker.allel.set(0, personMarker.allel.get(1));
+					personMarker.allel.set(1, temp);
+				}
+			}
+			
 			for(int i=0; i<allel.size(); ++i){
 				result = ( (allel.get(i) == null) ? personMarker.allel.get(i) == null : allel.get(i).equals(personMarker.allel.get(i)) );
 				if(!result)
