@@ -10,7 +10,7 @@
             <h:form id="table">
                 <ui:include src="templates/resultTable.xhtml"/>
             </h:form>
-            <h:panelGroup>
+            <h:panelGroup rendered="#{!conversation.solutionWithPerson}">
                 <h:form>
                     <ui:include src="templates/personUpload.xhtml"/>
                 </h:form>

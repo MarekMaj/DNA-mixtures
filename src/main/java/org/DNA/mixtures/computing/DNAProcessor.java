@@ -37,7 +37,7 @@ public class DNAProcessor implements Serializable{
      * @param person 		Given person with all markers characterizing it.
      * @return				Solution of the problem.
      */
-    public Object process(Mixture mixture, Person person) throws ErrorInInputDataException{
+    public Solution process(Mixture mixture, Person person) throws ErrorInInputDataException{
         
     	mixtureMarkers = (ArrayList<MixtureMarker>) mixture.getMarker();
     	examineMixture(mixtureMarkers);
@@ -67,7 +67,7 @@ public class DNAProcessor implements Serializable{
      * @param person    Information characterizing given person i.e. markers 
      * @return 			Solution of the problem
      */
-    public Object process(Person person) throws ErrorInInputDataException{
+    public Solution process(Person person) throws ErrorInInputDataException{
     	
     	ArrayList<PersonMarker> personMarkers = (ArrayList<PersonMarker>) person.getMarker();
     	examinePersonProfile(personMarkers);

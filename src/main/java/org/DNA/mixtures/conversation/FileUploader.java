@@ -54,6 +54,10 @@ public class FileUploader {
         return person;
     }
 
+    public void setPerson(Person person){
+        this.person = person;
+    }
+
     public UploadedFile getUploadedMixtureFile() {
         return uploadedMixtureFile;
     }

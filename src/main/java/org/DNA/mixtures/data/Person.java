@@ -33,7 +33,7 @@ import java.util.List;
 @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2012-01-24T03:29:39+01:00", comments = "JAXB RI vJAXB 2.1.10 in JDK 6")
 public class Person {
 
-    @XmlElementWrapper
+    @XmlElementWrapper(name = "markers")
     @XmlElement(required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2012-01-24T03:29:39+01:00", comments = "JAXB RI vJAXB 2.1.10 in JDK 6")
     protected List<PersonMarker> marker;

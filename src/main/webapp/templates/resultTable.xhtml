@@ -6,10 +6,64 @@
       xmlns:rich="http://richfaces.org/rich">
 
 <ui:composition>
-    <h:panelGroup styleClass="top">
+    <h:panelGroup>
         <h:outputText value="Oto wyniki algorytmu:"/>
-        <br />
-        <h:outputText value="TODO tabelka"/>
+        <h:panelGrid columns="2" style="width:400px;" columnClasses="top,top">
+            <h:form>
+                <rich:extendedDataTable
+                        value="#{conversation.results.marker}" var="marker"
+                        selection="#{conversation.selection}" id="table" type="ordered"
+                        frozenColumns="1" style="width:100px;" selectionMode="single">
+                    <a4j:ajax execute="@form"
+                              event="selectionchange"
+                              listener="#{conversation.selectionListener}"
+                              render=":res" />
+                    <f:facet name="header">
+                        <h:outputText value="Lista markerów" />
+                    </f:facet>
+                    <rich:column>
+                        <h:outputText value="Marker +#{marker.name}" />
+                    </rich:column>
+
+                </rich:extendedDataTable>
+            </h:form>
+            <a4j:outputPanel id="res">
+                <rich:panel header="Wybrany marker + #{conversation.selectedMarker.name}"
+                            rendered="#{conversation.selectedMarker != null}">
+                    <h:outputText rendered="#{conversation.selectedMarker.profileCombination.get(0).marker.size() > 1}"
+                                  value="W mieszaninie są #{conversation.selectedMarker.profileCombination.get(0).marker.size()} osoby"/>
+                    <h:outputText rendered="#{conversation.selectedMarker.profileCombination.get(0).marker.size() == 1}"
+                                  value="W mieszaninie jest #{conversation.selectedMarker.profileCombination.get(0).marker.size()} osoba"/>
+                    <rich:dataTable value="#{conversation.selectedMarker.profileCombination}" var="combination" rowKeyVar="row">
+                        <f:facet name="header">
+                            <rich:columnGroup>
+                                <rich:column>
+                                    <h:outputText value="Nr kombinacji" />
+                                </rich:column>
+                                <rich:column colspan="3">
+                                    <h:outputText value="Profile osób" />
+                                </rich:column>
+                            </rich:columnGroup>
+                        </f:facet>
+                        <rich:column>
+                            <h:outputText value="#{row +1}:"/>
+                        </rich:column>
+                        <rich:column rendered="#{combination.marker.size() > 0}">
+                            <h:outputText value="#{combination.marker.get(0).allel.get(0)}#{combination.marker.get(0).allel.get(1)}" />
+                        </rich:column>
+
+                        <rich:column rendered="#{combination.marker.size() > 1}">
+                            <h:outputText value="#{combination.marker.get(1).allel.get(0)}#{combination.marker.get(1).allel.get(1)}" />
+                        </rich:column>
+
+                        <rich:column rendered="#{combination.marker.size() > 2}">
+                            <h:outputText value="#{combination.marker.get(2).allel.get(0)}#{combination.marker.get(2).allel.get(1)}" />
+                        </rich:column>
+
+                    </rich:dataTable>
+                </rich:panel>
+            </a4j:outputPanel>
+        </h:panelGrid>
     </h:panelGroup>
 </ui:composition>
 </html>
