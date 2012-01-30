@@ -8,10 +8,10 @@
 <ui:composition>
     <h:panelGroup>
         <h:panelGroup>
-            <h:outputText value="Wprowadź profil mieszaniny DNA w postaci pliku xml zgodnego z XML Schema dostępnym na stronie: "/>
+            <h:outputText value="Upload mixture in XML file according to the XSD Schema available here: "/>
             <h:outputLink value="schemas/DNAmixture-schema.xsd" >mixture schema</h:outputLink>
             <br />
-            <h:outputText value="Maksymalny rozmiar pliku to 10kB"/>
+            <h:outputText value="Maximum file size 10kB"/>
             <rich:fileUpload fileUploadListener="#{fileUploader.mixtureListener}"
                              id="upload" acceptedTypes="xml" maxFilesQuantity="1">
                 <a4j:ajax event="uploadcomplete" execute="@none" render="info"/>
@@ -24,15 +24,15 @@
                 </f:facet>
                 <h:outputText value="No files currently uploaded"
                               rendered="#{fileUploader.uploadedMixtureFile==null}" />
-                <h:outputText style="color:red" value ="ERROR: Nie udało się sparsować pliku! Sprawdź czy plik jest zgodny z XML Schema!"
+                <h:outputText style="color:red" value ="ERROR: Unable to parse given file. Check if file is consistent with scheme!"
                               rendered="#{fileUploader.uploadedMixtureFile!=null and fileUploader.mixture==null}" />
-                <h:outputText style="color:green" value ="Wczytano plik:"
+                <h:outputText style="color:green" value ="Uploaded file:"
                               rendered="#{fileUploader.uploadedMixtureFile!=null and fileUploader.mixture!=null}" />
                 <rich:panel bodyClass="rich-laguna-panel-no-header" rendered="#{fileUploader.uploadedMixtureFile!=null and fileUploader.mixture!=null}">
                     <h:panelGrid columns="2">
-                        <h:outputText value="Nazwa pliku:" />
+                        <h:outputText value="File name:" />
                         <h:outputText value="#{fileUploader.uploadedMixtureFile.name}" />
-                        <h:outputText value="Markerów:" />
+                        <h:outputText value="Markers:" />
                         <h:outputText value="#{fileUploader.mixture.getMarker().size()}" />
                     </h:panelGrid>
                 </rich:panel>

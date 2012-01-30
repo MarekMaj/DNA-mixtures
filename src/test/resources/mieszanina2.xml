@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--http://en.wikipedia.org/wiki/List_of_Y-STR_markers-->
+<mixture>
+    <markers>
+        <marker name="DYS385">
+            <allel>12</allel>
+            <allel>15</allel>
+            <allel>17</allel>
+        </marker>
+        <marker name="DYS390">
+            <allel>18</allel>
+            <allel>19</allel>
+        </marker>
+        <marker name="DYS392">
+            <allel>10</allel>
+            <allel>12</allel>
+            <allel>14</allel>
+            <allel>16</allel>
+        </marker>
+        <marker name="DYS438">
+            <allel>8</allel>
+            <allel>9</allel>
+            <allel>11</allel>
+        </marker>
+        <marker name="DYS447">
+            <allel>23</allel>
+            <allel>24</allel>
+            <allel>27</allel>
+            <allel>28</allel>
+        </marker>
+        <marker name="DYS452">
+            <allel>28</allel>
+            <allel>29</allel>
+            <allel>33</allel>
+        </marker>
+    </markers>
+</mixture>

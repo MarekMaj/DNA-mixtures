@@ -6,6 +6,8 @@ import org.DNA.mixtures.data.Person;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
+import java.io.IOException;
+
 
 public class FileUploader {
 
@@ -20,28 +22,47 @@ public class FileUploader {
 		super();
 	}
 
-    public void mixtureListener(FileUploadEvent event) throws Exception {
+    /** Method listens for {@link FileUploadEvent} and parses given mixture file. Result is saved in
+     * mixture member.
+     *
+     * @param event          file upload event
+     * @throws IOException   wrong io
+     */
+    public void mixtureListener(FileUploadEvent event) throws IOException {
         clearMixture();
         this.uploadedMixtureFile = event.getUploadedFile();
         this.mixture = handler.createMixture(this.uploadedMixtureFile.getInputStream());
     }
- 
-    public void personListener(FileUploadEvent event) throws Exception {
+
+    /** Method listens for {@link FileUploadEvent} and parses given person file. Result is saved in
+     * person member.
+     *
+     * @param event          file upload event
+     * @throws IOException   wrong io
+     */
+    public void personListener(FileUploadEvent event) throws IOException {
         clearPerson();
         this.uploadedPersonFile = event.getUploadedFile();
         this.person = handler.createPerson(this.uploadedPersonFile.getInputStream());
     }
 
+    /**
+     *  Clears mixture and uploadedMixtureFile members.
+     */
     public void clearMixture (){
         this.uploadedMixtureFile = null;
         this.mixture = null;
     }
 
+    /**
+     *  Clears mixture and uploadedMixtureFile members.
+     */
     public void clearPerson (){
         this.uploadedPersonFile = null;
         this.person = null;
     }
 
+    // getters and setters
     public UploadedFile getUploadedPersonFile() {
         return uploadedPersonFile;
     }

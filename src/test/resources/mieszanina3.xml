@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mixture>
+    <markers>
+        <marker name="marker1">
+            <allel>A</allel>
+            <allel>B</allel>
+        </marker>
+        <marker name="marker2">
+            <allel>12</allel>
+        </marker>
+        <marker name="marker3">
+            <allel>11</allel>
+            <allel>12</allel>
+            <allel>13</allel>
+            <allel>14</allel>
+            <allel>15</allel>
+            <allel>16</allel>
+        </marker>
+    </markers>
+</mixture>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--http://www.cstl.nist.gov/strbase/coreSTRs.htm-->
+<mixture>
+    <markers>
+        <marker name="FGA">
+            <allel>14</allel>
+            <allel>17</allel>
+            <allel>20</allel>
+            <allel>22</allel>
+        </marker>
+        <marker name="TH01">
+            <allel>5</allel>
+            <allel>7</allel>
+            <allel>8</allel>
+        </marker>
+        <marker name="vWA">
+            <allel>10</allel>
+            <allel>12</allel>
+            <allel>14</allel>
+            <allel>18</allel>
+        </marker>
+        <marker name="D3S1358">
+            <allel>9</allel>
+            <allel>10</allel>
+            <allel>14</allel>
+            <allel>14.3</allel>
+            <allel>16</allel>
+        </marker>
+        <marker name="D8S1179">
+            <allel>11</allel>
+            <allel>12</allel>
+            <allel>14</allel>
+            <allel>15</allel>
+            <allel>17</allel>
+        </marker>
+        <marker name="D18S51">
+            <allel>12</allel>
+            <allel>14</allel>
+        </marker>
+        <marker name="D21S11">
+            <allel>25</allel>
+            <allel>28</allel>
+            <allel>30</allel>
+            <allel>33.2</allel>
+        </marker>
+    </markers>
+</mixture>

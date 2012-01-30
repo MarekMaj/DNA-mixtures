@@ -20,13 +20,13 @@ public class DNAProcessorOptimizedProcessMethodTest {
 	@Test
 	public void personWith1MarkerTest() throws ErrorInInputDataException{
 		DNAProcessor p = new DNAProcessor();
-		
+		//check if algorithm copes with repetitions in mixture
 		Mixture mixture = new Mixture();
 		ArrayList<MixtureMarker> markers = (ArrayList<MixtureMarker>) mixture.getMarker();
 		MixtureMarker marker = new MixtureMarker();
 		markers.add(marker);
 		ArrayList<String> allels = (ArrayList<String>) marker.getAllel();
-		allels.add("A"); allels.add("B"); allels.add("C"); allels.add("D"); allels.add("E");
+		allels.add("A"); allels.add("B"); allels.add("C"); allels.add("D"); allels.add("E"); allels.add("E"); allels.add("D");
 		
 		//important part
 		p.process(mixture, new Person());

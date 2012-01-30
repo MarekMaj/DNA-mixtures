@@ -1,7 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:rich="http://richfaces.org/rich"
       xmlns:a4j="http://richfaces.org/a4j">
 
 <ui:composition template="templates/template.xhtml">
@@ -15,7 +14,7 @@
                     <ui:include src="templates/personUpload.xhtml"/>
                 </h:form>
                 <h:form>
-                    <a4j:commandButton render="table, error" value="Oblicz z nowym profilem" action="#{conversation.computePerson}"/>
+                    <a4j:commandButton render="table, error" value="Compute with new profile" action="#{conversation.computePerson}"/>
                 </h:form>
             </h:panelGroup>
         </h:panelGrid>
@@ -23,10 +22,10 @@
     <ui:define name="nav">
         <h:panelGrid columns="2">
             <h:form>
-                <h:commandButton value="Cofnij" action="insert?faces-redirect=true"/>
+                <h:commandButton value="Back" action="insert?faces-redirect=true"/>
             </h:form>
             <h:form>
-                <h:commandButton value="Zakończ" action="#{conversation.end}"/>
+                <h:commandButton value="Finish" action="#{conversation.end}"/>
             </h:form>
         </h:panelGrid>
     </ui:define>

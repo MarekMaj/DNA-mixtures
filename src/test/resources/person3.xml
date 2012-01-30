@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<person>
+    <markers>
+        <marker name="marker1">
+            <allel>A</allel>
+            <allel>B</allel>
+        </marker>
+        <marker name="marker2">
+            <allel>12</allel>
+            <allel>12</allel>
+        </marker>
+        <marker name="marker3">
+            <allel>11</allel>
+            <allel>15</allel>
+        </marker>
+    </markers>
+</person>

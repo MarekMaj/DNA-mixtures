@@ -110,9 +110,6 @@ public class PersonMarker {
 			return false;
 		
 		PersonMarker personMarker = (PersonMarker) obj;
-		
-		if( !(name == null ? personMarker.name == null : this.equals(personMarker.name)) )
-			return false;	
 			
 		if(allel == null && personMarker.allel == null)
 			return true;

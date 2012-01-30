@@ -41,14 +41,14 @@ public class Algorithms {
 	 * @return					solution of the problem, usually passes it to DNAProcessor
 	 */
 	public Solution calculateProfiles(ArrayList<MixtureMarker> mixtureMarkers, ArrayList<PersonMarker> personMarkers){
-		long start = System.nanoTime();
+		//long start = System.nanoTime();
 		
 		Solution solution = new Solution();
 		ArrayList<SolutionMarker> solutionMarkers = (ArrayList<SolutionMarker>)solution.getMarker();				
 		
 		int iter = 0;
 		for(MixtureMarker marker : mixtureMarkers){
-			SolutionMarker solutionMarker = new SolutionMarker();
+			SolutionMarker solutionMarker = new SolutionMarker(marker.getName());
 			profilesCombinations = (ArrayList<ProfileCombination>)solutionMarker.getProfileCombination();
 			
 			allels = (ArrayList<String>) marker.getAllel();
@@ -87,16 +87,16 @@ public class Algorithms {
 
 		profilesCombinations = null;
 		
-		long elapsedTime = System.nanoTime() - start;
+		//long elapsedTime = System.nanoTime() - start;
 		//System.out.println(String.valueOf(elapsedTime / 1000000000L) + " [s]");
 
 		return solution;	
 	}
 
-	private void prepareUnusedAllelsArr(){	
+/*	private void prepareUnusedAllelsArr(){
 		for(int i=0; i<unusedAllelsArr.length; ++i)
 			unusedAllelsArr[i] = 0;
-	}
+	}*/
 	
 	private void countUnusedAllels(){
 		noOfUnusedAllels = 0;
@@ -156,10 +156,10 @@ public class Algorithms {
 		}
 	}
 	
-	private void printResult(){				
+/*	private void printResult(){
 		for(Genotype p: innerRepresentationOfCombination){
 			System.out.print(String.valueOf(p.first) + String.valueOf(p.second) + " ");
 		}
 		System.out.println("");
-	}	
+	}	*/
 }

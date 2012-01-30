@@ -11,7 +11,6 @@ import org.DNA.mixtures.data.PersonMarker;
 import org.DNA.mixtures.data.ProfileCombination;
 import org.DNA.mixtures.data.Solution;
 import org.DNA.mixtures.data.SolutionMarker;
-import org.DNA.mixtures.tests.ExampleDataSet;
 
 public class DNAProcessor implements Serializable{
 
@@ -22,7 +21,7 @@ public class DNAProcessor implements Serializable{
 	
 	private Solution mixtureSolution;					//solution calculated when only mixture was given
 	private ArrayList<MixtureMarker> mixtureMarkers;	//markers will be of some help when we want to calculate solution based on solution calculated for mixture only
-	private Solution solutionWithGivenProfile;			//solution when AFTER calculating solution for mixture, profile is supplied 
+	private Solution solutionWithGivenProfile;			//solution when AFTER calculating solution for mixture, profile is supplied
 	
     public DNAProcessor() {
         super();
@@ -36,6 +35,7 @@ public class DNAProcessor implements Serializable{
      * @param mixture 		Mixture with all markers characterizing it.	
      * @param person 		Given person with all markers characterizing it.
      * @return				Solution of the problem.
+     * @throws ErrorInInputDataException wrong input data (semantically)
      */
     public Solution process(Mixture mixture, Person person) throws ErrorInInputDataException{
         
@@ -66,6 +66,7 @@ public class DNAProcessor implements Serializable{
      * 
      * @param person    Information characterizing given person i.e. markers 
      * @return 			Solution of the problem
+     * @throws ErrorInInputDataException wrong input data (semantically)
      */
     public Solution process(Person person) throws ErrorInInputDataException{
     	
@@ -78,7 +79,7 @@ public class DNAProcessor implements Serializable{
     	
     	for(int i=0; i<mixtureSolutionMarkers.size(); ++i){
     		ArrayList<ProfileCombination> mixtureProfilesCombinations = (ArrayList<ProfileCombination>) mixtureSolutionMarkers.get(i).getProfileCombination();
-    		SolutionMarker solutionMarker = new SolutionMarker();
+    		SolutionMarker solutionMarker = new SolutionMarker(mixtureSolutionMarkers.get(i).getName());
     		ArrayList<ProfileCombination> profilesCombinations = (ArrayList<ProfileCombination>)solutionMarker.getProfileCombination();
     		
     		for(int j=0; j<mixtureProfilesCombinations.size(); ++j){

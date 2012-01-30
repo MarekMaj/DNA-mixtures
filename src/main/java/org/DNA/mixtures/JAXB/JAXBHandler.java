@@ -17,7 +17,13 @@ import org.DNA.mixtures.data.Person;
 import org.xml.sax.SAXException;
 
 public class JAXBHandler {
-	
+
+    /** Creates {@link Mixture} object using JAXB technology. Given file is
+     * validated against the xsd schema. If file is correct new object is returned.
+     *
+     * @param is            uploaded file
+     * @return              mixture parsed from file
+     */
 	@SuppressWarnings("unchecked")
 	public Mixture createMixture(InputStream is){
         JAXBElement<Mixture> obj = null;
@@ -30,7 +36,6 @@ public class JAXBHandler {
 
             URL url = JAXBHandler.class.getResource("JAXBHandler.class");
             String className = url.getFile();
-            System.out.println("url: " + url);
             String s = className.substring(className.indexOf('/'), className.indexOf("WEB-INF"));
 
             /*String r = JAXBHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -48,7 +53,13 @@ public class JAXBHandler {
         }
         return obj.getValue();
 	}
-	
+
+    /** Creates {@link Person} object using JAXB technology. Given file is
+     * validated against the xsd schema. If file is correct new object is returned.
+     *
+     * @param is            uploaded file
+     * @return              mixture parsed from file
+     */
 	@SuppressWarnings("unchecked")
 	public Person createPerson(InputStream is){
         JAXBElement<Person> obj = null;
