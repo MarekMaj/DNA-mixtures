@@ -24,13 +24,13 @@ import javax.inject.Named;
 public class Conversation implements Serializable{
 
     private javax.enterprise.context.Conversation conversation;
-    private DNAProcessor dnaProcessor;
-    private Solution results;
-    private SolutionMarker selectedMarker;              // Marker selected in result view.
-    private Collection<Object> selection;               // Items selected in result view.
-    private boolean solutionWithPerson;                 // Flag states if solution was computed with some person profile.
+    private DNAProcessor dnaProcessor;                  //Computes profiles for given mixture
+    private Solution results;                           //Solution returned from DNAProcessor
+    private SolutionMarker selectedMarker;              //Marker selected in result view.
+    private Collection<Object> selection;               //Items selected in result view.
+    private boolean solutionWithPerson;                 //Flag states if solution was computed with some person profile.
     @Produces @Named
-    private FileUploader fileUploader = new FileUploader();
+    private FileUploader fileUploader = new FileUploader();         //Handles file uploading
 
 
     public Conversation(){
